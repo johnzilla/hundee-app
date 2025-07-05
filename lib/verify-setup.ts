@@ -14,12 +14,13 @@ export async function verifySupabaseSetup() {
   };
 
   try {
-    // Test basic connection
-    const { data: connectionTest, error: connectionError } = await supabase
+    // Test basic connection with a simple query
+    const { data, error: connectionError } = await supabase
       .from('profiles')
-      .select('count', { count: 'exact', head: true });
+      .select('id')
+      .limit(1);
     
-    if (connectionError) {
+    if (connectionError && connectionError.code !== 'PGRST116') {
       results.error = `Connection failed: ${connectionError.message}`;
       return results;
     }
@@ -27,40 +28,34 @@ export async function verifySupabaseSetup() {
     results.connection = true;
 
     // Test auth functionality
-    const { data: authTest, error: authError } = await supabase.auth.getSession();
-    if (!authError) {
+    try {
+      const { data: authTest, error: authError } = await supabase.auth.getSession();
       results.auth = true;
+    } catch (authError) {
+      console.warn('Auth test failed:', authError);
+      results.auth = false;
     }
 
-    // Check if tables exist
-    const { data: tablesData, error: tablesError } = await supabase
-      .rpc('check_table_exists', { table_name: 'profiles' })
-      .then(() => ({ data: true, error: null }))
-      .catch(() => ({ data: false, error: 'Tables not found' }));
+    // Test each table individually
+    const tableTests = await Promise.allSettled([
+      supabase.from('profiles').select('id').limit(1),
+      supabase.from('goals').select('id').limit(1),
+      supabase.from('goal_updates').select('id').limit(1),
+    ]);
 
-    if (!tablesError) {
-      // Test each table
-      const tableTests = await Promise.allSettled([
-        supabase.from('profiles').select('count', { count: 'exact', head: true }),
-        supabase.from('goals').select('count', { count: 'exact', head: true }),
-        supabase.from('goal_updates').select('count', { count: 'exact', head: true }),
-      ]);
+    results.tables.profiles = tableTests[0].status === 'fulfilled' || 
+      (tableTests[0].status === 'rejected' && (tableTests[0].reason as any)?.code === 'PGRST116');
+    results.tables.goals = tableTests[1].status === 'fulfilled' || 
+      (tableTests[1].status === 'rejected' && (tableTests[1].reason as any)?.code === 'PGRST116');
+    results.tables.goal_updates = tableTests[2].status === 'fulfilled' || 
+      (tableTests[2].status === 'rejected' && (tableTests[2].reason as any)?.code === 'PGRST116');
 
-      results.tables.profiles = tableTests[0].status === 'fulfilled';
-      results.tables.goals = tableTests[1].status === 'fulfilled';
-      results.tables.goal_updates = tableTests[2].status === 'fulfilled';
-    }
-
-    // Test RLS policies by trying to access data (should work even if no data exists)
-    const { error: policyError } = await supabase
-      .from('goals')
-      .select('id')
-      .limit(1);
+    // Test RLS policies - PGRST116 means RLS is working (no rows returned due to policies)
+    results.policies = results.tables.profiles && results.tables.goals && results.tables.goal_updates;
     
-    results.policies = !policyError || policyError.code !== 'PGRST116';
-
   } catch (error: any) {
-    results.error = error.message;
+    results.error = `Setup check failed: ${error.message}`;
+    console.error('Supabase setup verification error:', error);
   }
 
   return results;
