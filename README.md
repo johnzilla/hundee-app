@@ -127,9 +127,9 @@ Hundee is built with privacy in mind:
 
 ## Contact
 
-- **Email**: hello@hundee.app
+- **Email**: hello@endurotech.ventures
 - **Website**: [hundee.app](https://hundee.app)
-- **GitHub**: [github.com/yourusername/hundee](https://github.com/yourusername/hundee)
+- **GitHub**: [github.com/endurotech/hundee](https://github.com/endurotech/hundee)
 
 ## License
 
@@ -142,6 +142,7 @@ This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENS
 - Database and auth by [Supabase](https://supabase.com/)
 - Deployed on [Netlify](https://netlify.com/)
 - Icons by [Lucide](https://lucide.dev/)
+- Created by [Enduro Tech Ventures LLC](https://endurotech.ventures)
 
 ---
 

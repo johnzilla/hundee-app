@@ -101,8 +101,8 @@ export function ContactForm() {
       <div className="mt-8 text-center text-sm text-muted-foreground">
         <p>
           You can also reach us at{' '}
-          <a href="mailto:hello@hundee.app" className="text-primary hover:underline">
-            hello@hundee.app
+          <a href="mailto:hello@endurotech.ventures" className="text-primary hover:underline">
+            hello@endurotech.ventures
           </a>
         </p>
       </div>

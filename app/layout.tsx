@@ -8,9 +8,9 @@ export const metadata: Metadata = {
   title: 'Hundee - Track Your Journey to 100',
   description: 'A beautiful goal tracker app where you complete 100 of anything. Track progress, share achievements, and celebrate milestones.',
   keywords: 'goal tracker, habit tracker, progress tracker, 100 days, productivity, goals, habits',
-  authors: [{ name: 'Hundee Team' }],
-  creator: 'Hundee',
-  publisher: 'Hundee',
+  authors: [{ name: 'Enduro Tech Ventures LLC' }],
+  creator: 'Enduro Tech Ventures LLC',
+  publisher: 'Enduro Tech Ventures LLC',
   formatDetection: {
     email: false,
     address: false,
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Hundee - Track Your Journey to 100',
     description: 'A beautiful goal tracker app where you complete 100 of anything.',
-    creator: '@hundeeapp',
+    creator: '@endurotech',
   },
   viewport: {
     width: 'device-width',

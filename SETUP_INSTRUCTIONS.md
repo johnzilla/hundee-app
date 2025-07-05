@@ -47,6 +47,10 @@ Once all checks are green, you can:
 
 ---
 
+**Hundee** - Created by Enduro Tech Ventures LLC
+
+---
+
 **Need help?** The SQL migration creates:
 - User profiles table
 - Goals tracking table  

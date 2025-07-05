@@ -9,6 +9,7 @@ export default function SetupPage() {
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-purple-600 mb-2">Hundee Setup</h1>
           <p className="text-lg text-gray-600">Verify your Supabase configuration</p>
+          <p className="text-sm text-muted-foreground mt-2">by Enduro Tech Ventures LLC</p>
         </div>
         
         <SetupChecker />

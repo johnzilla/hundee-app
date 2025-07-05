@@ -103,6 +103,9 @@ export function ShareCard({ isOpen, onOpenChange, goal }: ShareCardProps) {
                   <p className="text-sm text-muted-foreground">
                     Track your own 100s at <span className="font-semibold">Hundee.app</span>
                   </p>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    by Enduro Tech Ventures LLC
+                  </p>
                 </div>
               </div>
             </CardContent>
