@@ -56,7 +56,7 @@ A beautiful goal tracker app where users complete "100 of anything" - from pushu
 4. **Run database migrations**
    - Go to your Supabase project dashboard
    - Navigate to SQL Editor
-   - Run the SQL from `supabase/migrations/create_initial_schema.sql`
+   - Run the SQL from `supabase/migrations/20250705210620_dusty_torch.sql`
 
 5. **Start the development server**
    ```bash
