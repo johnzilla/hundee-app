@@ -29,8 +29,13 @@ export async function verifySupabaseSetup() {
 
     // Test auth functionality
     try {
-      const { data: authTest, error: authError } = await supabase.auth.getSession();
-      results.auth = true;
+      const { error: authError } = await supabase.auth.getSession();
+      if (authError) {
+        results.auth = false;
+        results.error = `Auth test failed: ${authError.message}`;
+      } else {
+        results.auth = true;
+      }
     } catch (authError) {
       console.warn('Auth test failed:', authError);
       results.auth = false;
