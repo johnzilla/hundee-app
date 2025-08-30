@@ -118,11 +118,12 @@ NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
 HCAPTCHA_SECRET=your_hcaptcha_secret_key # Optional, enables CAPTCHA verification
+NEXT_PUBLIC_HCAPTCHA_SITEKEY=your_hcaptcha_site_key # Optional, required for client CAPTCHA widget
 ```
 
 The application checks for these variables at startup and will throw a descriptive error if any are missing.
 
-The sign-up API route is rate limited to 5 requests per minute per IP and will perform hCaptcha verification when `HCAPTCHA_SECRET` is set.
+The sign-up API route is rate limited to 5 requests per minute per IP and will perform hCaptcha verification when `HCAPTCHA_SECRET` is set. You must also set `NEXT_PUBLIC_HCAPTCHA_SITEKEY` to render the client widget.
 
 ## Contributing
 

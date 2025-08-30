@@ -4,14 +4,15 @@ export async function signUp(
   email: string,
   password: string,
   username: string,
-  fullName?: string
+  fullName?: string,
+  captchaToken?: string
 ) {
   const res = await fetch('/api/signup', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ email, password, username, fullName }),
+    body: JSON.stringify({ email, password, username, fullName, captchaToken }),
   });
 
   const data = await res.json();

@@ -9,16 +9,19 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { signIn, signUp } from '@/lib/auth';
 import { toast } from 'react-hot-toast';
 import { ResendVerification } from './resend-verification';
+// eslint-disable-next-line import/no-unresolved
+import HCaptcha from 'react-hcaptcha';
 
 export function AuthForm() {
   const [loading, setLoading] = useState(false);
   const [signInData, setSignInData] = useState({ email: '', password: '' });
-  const [signUpData, setSignUpData] = useState({ 
-    email: '', 
-    password: '', 
-    username: '', 
-    fullName: '' 
+  const [signUpData, setSignUpData] = useState({
+    email: '',
+    password: '',
+    username: '',
+    fullName: ''
   });
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,7 +42,13 @@ export function AuthForm() {
     setLoading(true);
     
     try {
-      await signUp(signUpData.email, signUpData.password, signUpData.username, signUpData.fullName);
+      await signUp(
+        signUpData.email,
+        signUpData.password,
+        signUpData.username,
+        signUpData.fullName,
+        captchaToken || undefined
+      );
       toast.success('Check your email to verify your account');
     } catch (error: any) {
       toast.error(error.message || 'Sign up failed');
@@ -138,6 +147,13 @@ export function AuthForm() {
                   required
                 />
               </div>
+              {process.env.NEXT_PUBLIC_HCAPTCHA_SITEKEY && (
+                <HCaptcha
+                  sitekey={process.env.NEXT_PUBLIC_HCAPTCHA_SITEKEY}
+                  onVerify={token => setCaptchaToken(token)}
+                  onExpire={() => setCaptchaToken(null)}
+                />
+              )}
               <Button type="submit" className="w-full" disabled={loading}>
                 {loading ? 'Creating account...' : 'Create Account'}
               </Button>
