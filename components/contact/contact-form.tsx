@@ -49,7 +49,7 @@ export function ContactForm() {
         <CardHeader>
           <CardTitle className="text-2xl">Get in Touch</CardTitle>
           <p className="text-muted-foreground">
-            Have feedback, questions, or suggestions? We'd love to hear from you!
+            Have feedback, questions, or suggestions? We&apos;d love to hear from you!
           </p>
         </CardHeader>
         <CardContent>
