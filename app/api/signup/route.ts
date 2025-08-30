@@ -99,6 +99,7 @@ export async function POST(req: Request) {
           id: userData.user.id,
           username,
           full_name: fullName || null,
+          is_public: false,
         },
       ]);
 

@@ -67,13 +67,14 @@ export async function getPublicGoals() {
     .from('goals')
     .select(`
       *,
-      profiles:user_id (
+      profiles!inner:user_id (
         username,
         full_name
       )
     `)
     .eq('is_public', true)
     .eq('is_completed', true)
+    .eq('profiles.is_public', true)
     .order('completed_at', { ascending: false })
     .limit(50);
 
