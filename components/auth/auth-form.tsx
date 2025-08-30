@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { signIn, signUp } from '@/lib/auth';
 import { toast } from 'react-hot-toast';
+import { ResendVerification } from './resend-verification';
 
 export function AuthForm() {
   const [loading, setLoading] = useState(false);
@@ -39,7 +40,7 @@ export function AuthForm() {
     
     try {
       await signUp(signUpData.email, signUpData.password, signUpData.username, signUpData.fullName);
-      toast.success('Account created successfully!');
+      toast.success('Check your email to verify your account');
     } catch (error: any) {
       toast.error(error.message || 'Sign up failed');
     } finally {
@@ -143,6 +144,9 @@ export function AuthForm() {
             </form>
           </TabsContent>
         </Tabs>
+        <div className="mt-6">
+          <ResendVerification />
+        </div>
       </CardContent>
     </Card>
   );

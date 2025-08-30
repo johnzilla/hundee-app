@@ -11,6 +11,7 @@ A beautiful goal tracker app where users complete "100 of anything" - from pushu
 - **Clean Design**: Modern, responsive UI built with shadcn/ui and TailwindCSS
 - **Privacy-First**: No tracking, no ads, just pure goal tracking
 - **Transactional Sign-up**: User accounts and profiles are created atomically
+- **Email Verification & Password Reset**: Users confirm their email and can request password resets
 
 ## Tech Stack
 
@@ -65,6 +66,12 @@ A beautiful goal tracker app where users complete "100 of anything" - from pushu
 
 6. **Open [http://localhost:3000](http://localhost:3000)**
 
+### Password Reset & Email Verification
+
+- Use the `/api/password-reset` route to request a password reset email.
+- The `PasswordReset` component handles both sending reset requests and updating passwords after following the emailed link.
+- Users can resend confirmation emails through the `ResendVerification` component.
+
 ## Database Schema
 
 The app uses three main tables:
@@ -94,8 +101,8 @@ Row Level Security (RLS) is enabled for all tables to ensure data privacy.
 
 1. **Authentication Settings**:
    - Enable email/password authentication
-   - Disable email confirmation (or configure SMTP)
-   - Set your site URL in authentication settings
+   - Enable email confirmation (configure SMTP)
+   - Set your site URL and redirect URLs (e.g. `/auth/reset`) in authentication settings
 
 2. **Database Policies**:
    - All necessary RLS policies are created by the migration script
