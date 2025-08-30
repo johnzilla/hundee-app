@@ -83,6 +83,8 @@ Row Level Security (RLS) is enabled for all tables to ensure data privacy.
 2. **Set environment variables** in Netlify dashboard:
    - `NEXT_PUBLIC_SUPABASE_URL`
    - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+   - `SUPABASE_SERVICE_ROLE_KEY` (server-only; no `NEXT_PUBLIC_` prefix)
+   The sign-up API route requires `SUPABASE_SERVICE_ROLE_KEY`, so keep this key secret on the server.
 3. **Deploy settings**:
    - Build command: `npm run build`
    - Publish directory: `out`
