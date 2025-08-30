@@ -1,32 +1,24 @@
 import { supabase } from './supabase';
 
-export async function signUp(email: string, password: string, username: string, fullName?: string) {
-  const { data, error } = await supabase.auth.signUp({
-    email,
-    password,
-    options: {
-      data: {
-        username,
-        full_name: fullName,
-      },
+export async function signUp(
+  email: string,
+  password: string,
+  username: string,
+  fullName?: string
+) {
+  const res = await fetch('/api/signup', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
     },
+    body: JSON.stringify({ email, password, username, fullName }),
   });
 
-  if (error) throw error;
+  const data = await res.json();
 
-  // Create profile after successful signup
-  if (data.user) {
-    const { error: profileError } = await supabase
-      .from('profiles')
-      .insert([
-        {
-          id: data.user.id,
-          username,
-          full_name: fullName || null,
-        },
-      ]);
-
-    if (profileError) throw profileError;
+  if (!res.ok) {
+    const message = data.error || 'Sign up transaction failed';
+    throw new Error(message);
   }
 
   return data;

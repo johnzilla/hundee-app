@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { Header } from '@/components/layout/header';
 import { Navigation } from '@/components/layout/navigation';
 import { AuthForm } from '@/components/auth/auth-form';
@@ -27,15 +27,9 @@ export default function Home() {
   const [editingGoal, setEditingGoal] = useState<Goal | null>(null);
   const [sharingGoal, setSharingGoal] = useState<Goal | null>(null);
 
-  useEffect(() => {
-    if (user) {
-      fetchGoals();
-    }
-  }, [user]);
-
-  const fetchGoals = async () => {
+  const fetchGoals = useCallback(async () => {
     if (!user) return;
-    
+
     try {
       const data = await getUserGoals(user.id);
       setGoals(data);
@@ -44,7 +38,13 @@ export default function Home() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user]);
+
+  useEffect(() => {
+    if (user) {
+      fetchGoals();
+    }
+  }, [user, fetchGoals]);
 
   const handleCreateGoal = () => {
     setEditingGoal(null);
@@ -169,7 +169,7 @@ export default function Home() {
             <div className="text-center">
               <h1 className="text-3xl font-bold mb-2">Contact Us</h1>
               <p className="text-muted-foreground">
-                We'd love to hear your feedback and suggestions
+                We&apos;d love to hear your feedback and suggestions
               </p>
             </div>
             <ContactForm />

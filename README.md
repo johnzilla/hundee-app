@@ -10,6 +10,7 @@ A beautiful goal tracker app where users complete "100 of anything" - from pushu
 - **Hundee Wall**: Public feed of completed goals from the community
 - **Clean Design**: Modern, responsive UI built with shadcn/ui and TailwindCSS
 - **Privacy-First**: No tracking, no ads, just pure goal tracking
+- **Transactional Sign-up**: User accounts and profiles are created atomically
 
 ## Tech Stack
 
@@ -49,6 +50,7 @@ A beautiful goal tracker app where users complete "100 of anything" - from pushu
      ```env
      NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
      NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+     SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
      ```
 
 4. **Run database migrations**
@@ -105,6 +107,7 @@ Create a `.env.local` file with:
 ```env
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
 ```
 
 ## Contributing
