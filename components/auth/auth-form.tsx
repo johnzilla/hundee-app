@@ -9,8 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { signIn, signUp } from '@/lib/auth';
 import { toast } from 'react-hot-toast';
 import { ResendVerification } from './resend-verification';
-// eslint-disable-next-line import/no-unresolved
-import HCaptcha from 'react-hcaptcha';
+import HCaptcha from '@hcaptcha/react-hcaptcha';
 
 export function AuthForm() {
   const [loading, setLoading] = useState(false);
