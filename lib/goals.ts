@@ -73,9 +73,8 @@ export async function getPublicGoals() {
       )
     `)
     .eq('is_public', true)
-    .eq('is_completed', true)
     .eq('profiles.is_public', true)
-    .order('completed_at', { ascending: false })
+    .order('updated_at', { ascending: false })
     .limit(50);
 
   if (error) throw error;

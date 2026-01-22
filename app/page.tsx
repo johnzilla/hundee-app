@@ -88,6 +88,16 @@ export default function Home() {
           </div>
           <AuthForm />
         </div>
+        <Toaster
+          position="top-center"
+          toastOptions={{
+            duration: 4000,
+            style: {
+              background: '#363636',
+              color: '#fff',
+            },
+          }}
+        />
       </div>
     );
   }

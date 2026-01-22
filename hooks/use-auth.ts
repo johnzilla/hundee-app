@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { User } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
 import { getProfile } from '@/lib/auth';
@@ -10,6 +10,16 @@ export function useAuth() {
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
+
+  const refreshProfile = useCallback(async () => {
+    if (!user) return;
+    try {
+      const profileData = await getProfile(user.id);
+      setProfile(profileData);
+    } catch (error) {
+      console.error('Error refreshing profile:', error);
+    }
+  }, [user]);
 
   useEffect(() => {
     // Get initial session
@@ -42,5 +52,5 @@ export function useAuth() {
     return () => subscription.unsubscribe();
   }, []);
 
-  return { user, profile, loading };
+  return { user, profile, loading, refreshProfile };
 }

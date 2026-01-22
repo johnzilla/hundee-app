@@ -1,15 +1,18 @@
 'use client';
 
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { LogOut, Settings, User } from 'lucide-react';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger, DropdownMenuLabel } from '@/components/ui/dropdown-menu';
+import { Switch } from '@/components/ui/switch';
+import { LogOut, Globe } from 'lucide-react';
 import { useAuth } from '@/hooks/use-auth';
-import { signOut } from '@/lib/auth';
+import { signOut, updateProfile } from '@/lib/auth';
 import { toast } from 'react-hot-toast';
 
 export function Header() {
-  const { user, profile } = useAuth();
+  const { user, profile, refreshProfile } = useAuth();
+  const [updatingVisibility, setUpdatingVisibility] = useState(false);
 
   const handleSignOut = async () => {
     try {
@@ -17,6 +20,20 @@ export function Header() {
       toast.success('Signed out successfully');
     } catch (error: any) {
       toast.error(error.message || 'Sign out failed');
+    }
+  };
+
+  const handleVisibilityToggle = async (checked: boolean) => {
+    if (!user) return;
+    setUpdatingVisibility(true);
+    try {
+      await updateProfile(user.id, { is_public: checked });
+      await refreshProfile();
+      toast.success(checked ? 'Your goals are now visible on the Hundee Wall' : 'Your goals are now private');
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to update visibility');
+    } finally {
+      setUpdatingVisibility(false);
     }
   };
 
@@ -54,14 +71,20 @@ export function Header() {
                   </p>
                 </div>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                  <User className="mr-2 h-4 w-4" />
-                  <span>Profile</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Settings className="mr-2 h-4 w-4" />
-                  <span>Settings</span>
-                </DropdownMenuItem>
+                <DropdownMenuLabel className="text-xs font-normal text-muted-foreground">
+                  Visibility
+                </DropdownMenuLabel>
+                <div className="flex items-center justify-between px-2 py-1.5">
+                  <div className="flex items-center gap-2">
+                    <Globe className="h-4 w-4" />
+                    <span className="text-sm">Show on Hundee Wall</span>
+                  </div>
+                  <Switch
+                    checked={profile?.is_public ?? false}
+                    onCheckedChange={handleVisibilityToggle}
+                    disabled={updatingVisibility}
+                  />
+                </div>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleSignOut}>
                   <LogOut className="mr-2 h-4 w-4" />

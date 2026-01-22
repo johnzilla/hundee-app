@@ -55,3 +55,15 @@ export async function getProfile(userId: string) {
   if (error) throw error;
   return data;
 }
+
+export async function updateProfile(userId: string, updates: { is_public?: boolean; username?: string; full_name?: string }) {
+  const { data, error } = await supabase
+    .from('profiles')
+    .update(updates)
+    .eq('id', userId)
+    .select()
+    .single();
+
+  if (error) throw error;
+  return data;
+}

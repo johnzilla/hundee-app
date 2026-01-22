@@ -47,7 +47,7 @@ Once all checks are green, you can:
 
 ---
 
-**Hundee** - Created by Enduro Tech Ventures LLC
+**Hundee** - Created by [Enduro Tech Ventures LLC](https://www.endurotechventures.com)
 
 ---
 

@@ -160,7 +160,7 @@ This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENS
 - Database and auth by [Supabase](https://supabase.com/)
 - Deployed on [Netlify](https://netlify.com/)
 - Icons by [Lucide](https://lucide.dev/)
-- Created by [Enduro Tech Ventures LLC](https://endurotech.ventures)
+- Created by [Enduro Tech Ventures LLC](https://www.endurotechventures.com)
 
 ---
 
