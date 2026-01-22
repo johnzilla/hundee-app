@@ -67,7 +67,7 @@ export async function getPublicGoals() {
     .from('goals')
     .select(`
       *,
-      profiles!inner:user_id (
+      profiles!inner (
         username,
         full_name
       )
