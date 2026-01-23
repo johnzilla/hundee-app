@@ -55,9 +55,9 @@ export function HundeeWall() {
       <Card>
         <CardContent className="p-8 text-center">
           <Trophy className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-          <h3 className="text-lg font-semibold mb-2">No completed Hundees yet</h3>
+          <h3 className="text-lg font-semibold mb-2">No public Hundees yet</h3>
           <p className="text-muted-foreground">
-            Be the first to complete a goal and share it with the world!
+            Be the first to share your progress with the community!
           </p>
         </CardContent>
       </Card>
@@ -83,12 +83,18 @@ export function HundeeWall() {
                   </p>
                 </div>
               </div>
-              <div className="flex items-center gap-1">
-                <Star className="h-4 w-4 text-yellow-500 fill-current" />
-                <Badge variant="secondary" className="bg-green-100 text-green-800">
-                  Completed
+              {goal.is_completed ? (
+                <div className="flex items-center gap-1">
+                  <Star className="h-4 w-4 text-yellow-500 fill-current" />
+                  <Badge variant="secondary" className="bg-green-100 text-green-800">
+                    Completed
+                  </Badge>
+                </div>
+              ) : (
+                <Badge variant="secondary" className="bg-blue-100 text-blue-800">
+                  In Progress
                 </Badge>
-              </div>
+              )}
             </div>
           </CardHeader>
           <CardContent className="space-y-3">
@@ -101,7 +107,10 @@ export function HundeeWall() {
             <div className="flex items-center justify-between text-sm">
               <span className="font-medium">Progress: {goal.progress}/100</span>
               <span className="text-muted-foreground">
-                {goal.completed_at && formatDistanceToNow(new Date(goal.completed_at), { addSuffix: true })}
+                {goal.is_completed && goal.completed_at
+                  ? `Completed ${formatDistanceToNow(new Date(goal.completed_at), { addSuffix: true })}`
+                  : `Updated ${formatDistanceToNow(new Date(goal.updated_at), { addSuffix: true })}`
+                }
               </span>
             </div>
             
@@ -109,8 +118,10 @@ export function HundeeWall() {
               {Array.from({ length: 100 }, (_, i) => (
                 <div
                   key={i}
-                  className="aspect-square rounded-sm bg-primary border-primary"
-                  style={{ backgroundColor: goal.color }}
+                  className="aspect-square rounded-sm"
+                  style={{
+                    backgroundColor: i < goal.progress ? goal.color : '#e5e7eb'
+                  }}
                 />
               ))}
             </div>
