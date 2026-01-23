@@ -18,6 +18,7 @@ export function Header() {
     try {
       await signOut();
       toast.success('Signed out successfully');
+      window.location.reload();
     } catch (error: any) {
       toast.error(error.message || 'Sign out failed');
     }
@@ -86,7 +87,7 @@ export function Header() {
                   />
                 </div>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={handleSignOut}>
+                <DropdownMenuItem onSelect={handleSignOut}>
                   <LogOut className="mr-2 h-4 w-4" />
                   <span>Sign out</span>
                 </DropdownMenuItem>
