@@ -7,17 +7,18 @@ const RATE_LIMIT_MAX_REQUESTS = 5;
 const ipRateLimit = new Map<string, { count: number; firstRequest: number }>();
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
 if (!supabaseUrl) {
   throw new Error('Missing NEXT_PUBLIC_SUPABASE_URL');
 }
 
-if (!serviceRoleKey) {
-  throw new Error('Missing SUPABASE_SERVICE_ROLE_KEY');
+if (!supabaseAnonKey) {
+  throw new Error('Missing NEXT_PUBLIC_SUPABASE_ANON_KEY');
 }
 
-const supabaseAdmin = createClient(supabaseUrl, serviceRoleKey, {
+// Use anon key for regular signUp (triggers email confirmation)
+const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
     autoRefreshToken: false,
     persistSession: false,
@@ -78,38 +79,28 @@ export async function POST(req: Request) {
   }
 
   try {
-    const { data: userData, error: signUpError } = await supabaseAdmin.auth.admin.createUser({
+    // Use regular signUp - triggers email confirmation
+    // Profile is created automatically by database trigger
+    const { data, error: signUpError } = await supabase.auth.signUp({
       email,
       password,
-      email_confirm: true,
-      user_metadata: {
-        username,
-        full_name: fullName,
+      options: {
+        data: {
+          username,
+          full_name: fullName,
+        },
       },
     });
 
-    if (signUpError || !userData.user) {
-      throw signUpError || new Error('Failed to create user');
+    if (signUpError) {
+      throw signUpError;
     }
 
-    const { error: profileError } = await supabaseAdmin
-      .from('profiles')
-      .insert([
-        {
-          id: userData.user.id,
-          username,
-          full_name: fullName || null,
-          is_public: false,
-        },
-      ]);
-
-    if (profileError) {
-      await supabaseAdmin.auth.admin.deleteUser(userData.user.id);
-      throw profileError;
-    }
-
-    return NextResponse.json({ user: userData.user });
+    return NextResponse.json({
+      user: data.user,
+      message: 'Check your email to confirm your account'
+    });
   } catch (err: any) {
-    return NextResponse.json({ error: err.message || 'Transaction failed' }, { status: 400 });
+    return NextResponse.json({ error: err.message || 'Sign up failed' }, { status: 400 });
   }
 }

@@ -48,7 +48,7 @@ export function AuthForm() {
         signUpData.fullName,
         captchaToken || undefined
       );
-      toast.success('Account created! You can now sign in.');
+      toast.success('Check your email to confirm your account!');
     } catch (error: any) {
       toast.error(error.message || 'Sign up failed');
     } finally {
