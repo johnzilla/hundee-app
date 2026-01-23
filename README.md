@@ -7,7 +7,8 @@ A beautiful goal tracker app where users complete "100 of anything" - from pushu
 - **Simple Goal Creation**: Create goals with the format "100 of [X]"
 - **Visual Progress Tracking**: See your progress with both a progress bar and 100-block grid
 - **Social Sharing**: Generate beautiful share cards when you complete goals
-- **Hundee Wall**: Public feed of completed goals from the community
+- **Hundee Wall**: Public feed of goals from the community (in-progress and completed)
+- **Profile Visibility**: Toggle to control whether your goals appear on the Hundee Wall
 - **Clean Design**: Modern, responsive UI built with shadcn/ui and TailwindCSS
 - **Privacy-First**: No tracking, no ads, just pure goal tracking
 - **Transactional Sign-up**: User accounts and profiles are created atomically
@@ -15,11 +16,11 @@ A beautiful goal tracker app where users complete "100 of anything" - from pushu
 
 ## Tech Stack
 
-- **Framework**: Next.js 13 with App Router
+- **Framework**: Next.js 14 with App Router
 - **Styling**: TailwindCSS + shadcn/ui components
 - **Database**: Supabase (PostgreSQL)
 - **Authentication**: Supabase Auth
-- **Deployment**: Netlify
+- **Deployment**: Netlify (with @netlify/plugin-nextjs)
 - **Language**: TypeScript
 
 ## Getting Started
@@ -57,7 +58,9 @@ A beautiful goal tracker app where users complete "100 of anything" - from pushu
 4. **Run database migrations**
    - Go to your Supabase project dashboard
    - Navigate to SQL Editor
-   - Run the SQL from `supabase/migrations/20250705210620_dusty_torch.sql`
+   - Run the SQL files in order:
+     1. `supabase/migrations/20250705210620_dusty_torch.sql` (initial schema)
+     2. `supabase/migrations/20250708120000_add_is_public_to_profiles.sql` (profile visibility)
 
 5. **Start the development server**
    ```bash
@@ -92,9 +95,10 @@ Row Level Security (RLS) is enabled for all tables to ensure data privacy.
    - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
    - `SUPABASE_SERVICE_ROLE_KEY` (server-only; no `NEXT_PUBLIC_` prefix)
    The sign-up API route requires `SUPABASE_SERVICE_ROLE_KEY`, so keep this key secret on the server.
-3. **Deploy settings**:
+3. **Deploy settings** (auto-detected from `netlify.toml`):
    - Build command: `npm run build`
-   - Publish directory: `out`
+   - Publish directory: `.next`
+   - The `@netlify/plugin-nextjs` plugin handles API routes as serverless functions
 4. **Deploy** - Netlify will automatically build and deploy your app
 
 ### Supabase Configuration

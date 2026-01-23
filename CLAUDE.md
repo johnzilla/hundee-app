@@ -6,21 +6,21 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ```bash
 npm run dev        # Start development server at http://localhost:3000
-npm run build      # Production build (static export to out/)
+npm run build      # Production build (uses Netlify Next.js plugin)
 npm run start      # Start production server
 npm run lint       # Run ESLint
 ```
 
 ## Architecture Overview
 
-Hundee is a goal tracking app where users complete "100 of anything" challenges. It's built with Next.js 13 App Router and Supabase.
+Hundee is a goal tracking app where users complete "100 of anything" challenges. It's built with Next.js 14 App Router and Supabase.
 
 ### Tech Stack
-- **Frontend**: Next.js 13 (App Router), React 18, TypeScript
+- **Frontend**: Next.js 14 (App Router), React 18, TypeScript
 - **Styling**: TailwindCSS + shadcn/ui (Radix UI primitives)
 - **Backend**: Supabase (PostgreSQL with Row-Level Security)
 - **Auth**: Supabase Auth with email/password
-- **Deployment**: Netlify (static export)
+- **Deployment**: Netlify with @netlify/plugin-nextjs (supports API routes)
 
 ### Key Directories
 - `app/` - Next.js App Router pages and API routes
@@ -38,10 +38,13 @@ Three main tables with RLS policies:
 - `goal_updates` - Progress history
 
 ### Authentication Flow
-The `useAuth` hook in `hooks/use-auth.ts` manages auth state by subscribing to Supabase auth changes. Sign-up uses a transactional API route that creates both auth user and profile atomically with rollback on failure.
+The `useAuth` hook in `hooks/use-auth.ts` manages auth state by subscribing to Supabase auth changes. Sign-up uses a transactional API route (`app/api/signup/route.ts`) that creates both auth user and profile atomically with rollback on failure. The hook also exposes `refreshProfile()` for updating profile state after changes.
+
+### Profile Visibility
+Users control their visibility on the Hundee Wall via a toggle in the header dropdown menu. This updates `profiles.is_public` using `updateProfile()` in `lib/auth.ts`.
 
 ### Public Feed (Hundee Wall)
-The community feed at `components/goals/hundee-wall.tsx` shows completed public goals where both the goal and profile have `is_public=true`.
+The community feed at `components/goals/hundee-wall.tsx` shows all public goals (both in-progress and completed) where both the goal and profile have `is_public=true`. Goals display with custom colors and show "In Progress" or "Completed" badges.
 
 ## Environment Variables
 
