@@ -110,18 +110,18 @@ export function GoalCard({ goal, onUpdate, onEdit, onShare }: GoalCardProps) {
             <span>{goal.progress}/100</span>
             <span>{goal.progress}%</span>
           </div>
-          <Progress value={goal.progress} className="h-2" />
+          <Progress value={goal.progress} className="h-2" indicatorColor={goal.color} />
         </div>
         
         <div className="grid grid-cols-10 gap-1">
           {Array.from({ length: 100 }, (_, i) => (
             <div
               key={i}
-              className={`aspect-square rounded-sm border ${
-                i < goal.progress
-                  ? 'bg-primary border-primary'
-                  : 'bg-muted border-muted-foreground/20'
-              }`}
+              className="aspect-square rounded-sm"
+              style={{
+                backgroundColor: i < goal.progress ? goal.color : '#e5e7eb',
+                border: `1px solid ${i < goal.progress ? goal.color : '#d1d5db'}`
+              }}
             />
           ))}
         </div>
