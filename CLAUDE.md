@@ -24,12 +24,12 @@ Hundee is a goal tracking app where users complete "100 of anything" challenges.
 
 ### Key Directories
 - `app/` - Next.js App Router pages and API routes
-- `app/api/signup/route.ts` - Transactional sign-up with rate limiting and hCaptcha
+- `app/api/signup/route.ts` - Sign-up endpoint with rate limiting and optional hCaptcha
 - `components/` - React components organized by feature (auth/, goals/, layout/, ui/)
 - `components/ui/` - shadcn/ui components (do not edit directly, regenerate with CLI)
 - `lib/` - Business logic and utilities (supabase.ts, goals.ts, auth.ts)
 - `hooks/` - Custom React hooks (use-auth.ts for auth state)
-- `supabase/migrations/` - Database schema migrations
+- `supabase/migrations/` - Database schema migrations (includes profile creation trigger)
 
 ### Database Schema
 Three main tables with RLS policies:
@@ -38,7 +38,15 @@ Three main tables with RLS policies:
 - `goal_updates` - Progress history
 
 ### Authentication Flow
-The `useAuth` hook in `hooks/use-auth.ts` manages auth state by subscribing to Supabase auth changes. Sign-up uses a transactional API route (`app/api/signup/route.ts`) that creates both auth user and profile atomically with rollback on failure. The hook also exposes `refreshProfile()` for updating profile state after changes.
+The `useAuth` hook in `hooks/use-auth.ts` manages auth state by subscribing to Supabase auth changes. The hook also exposes `refreshProfile()` for updating profile state after changes.
+
+**Sign-up flow:**
+1. User submits signup form → `app/api/signup/route.ts` (rate limiting + optional hCaptcha)
+2. API calls `supabase.auth.signUp()` which sends confirmation email via Resend SMTP
+3. User clicks email link → Supabase confirms user
+4. Database trigger (`handle_new_user`) automatically creates profile from `user_metadata`
+
+**Email:** Configured via Resend SMTP in Supabase dashboard (sender: `noreply@hundee.app`)
 
 ### Profile Visibility
 Users control their visibility on the Hundee Wall via a toggle in the header dropdown menu. This updates `profiles.is_public` using `updateProfile()` in `lib/auth.ts`.
@@ -52,12 +60,11 @@ Required:
 ```env
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-SUPABASE_SERVICE_ROLE_KEY=your_service_role_key  # Server-only, for sign-up API
 ```
 
-Optional (enables hCaptcha on sign-up):
+Optional:
 ```env
-HCAPTCHA_SECRET=your_secret
+HCAPTCHA_SECRET=your_secret              # Enables hCaptcha on sign-up
 NEXT_PUBLIC_HCAPTCHA_SITEKEY=your_site_key
 ```
 

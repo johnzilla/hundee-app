@@ -93,8 +93,6 @@ Row Level Security (RLS) is enabled for all tables to ensure data privacy.
 2. **Set environment variables** in Netlify dashboard:
    - `NEXT_PUBLIC_SUPABASE_URL`
    - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-   - `SUPABASE_SERVICE_ROLE_KEY` (server-only; no `NEXT_PUBLIC_` prefix)
-   The sign-up API route requires `SUPABASE_SERVICE_ROLE_KEY`, so keep this key secret on the server.
 3. **Deploy settings** (auto-detected from `netlify.toml`):
    - Build command: `npm run build`
    - Publish directory: `.next`
@@ -105,13 +103,15 @@ Row Level Security (RLS) is enabled for all tables to ensure data privacy.
 
 1. **Authentication Settings**:
    - Enable email/password authentication
-   - Enable email confirmation (configure SMTP)
-   - Set your site URL and redirect URLs (e.g. `/auth/reset`) in authentication settings
+   - Enable email confirmation
+   - Configure SMTP (we use [Resend](https://resend.com) with `smtp.resend.com:465`)
+   - Set your site URL and redirect URLs in authentication settings
 
 2. **Database Policies**:
-   - All necessary RLS policies are created by the migration script
+   - All necessary RLS policies are created by the migration scripts
    - Users can only access their own data
    - Public goals are viewable by everyone
+   - Profile creation trigger auto-creates profiles on user signup
 
 ## Environment Variables
 
@@ -120,12 +120,13 @@ Create a `.env.local` file with:
 ```env
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
-HCAPTCHA_SECRET=your_hcaptcha_secret_key # Optional, enables CAPTCHA verification
-NEXT_PUBLIC_HCAPTCHA_SITEKEY=your_hcaptcha_site_key # Optional, required for client CAPTCHA widget
+
+# Optional - enables CAPTCHA verification on sign-up
+HCAPTCHA_SECRET=your_hcaptcha_secret_key
+NEXT_PUBLIC_HCAPTCHA_SITEKEY=your_hcaptcha_site_key
 ```
 
-The application checks for these variables at startup and will throw a descriptive error if any are missing.
+The application checks for required variables at startup and will throw a descriptive error if any are missing.
 
 The sign-up API route is rate limited to 5 requests per minute per IP and will perform hCaptcha verification when `HCAPTCHA_SECRET` is set. You must also set `NEXT_PUBLIC_HCAPTCHA_SITEKEY` to render the client widget.
 
